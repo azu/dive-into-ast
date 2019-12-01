@@ -1,5 +1,6 @@
 {
   "private": true,
+  "description": "Dive to AST(Abstract Syntax Tree) in JavaScript.",
   "version": "1.0.0",
   "workspaces": [
     "examples/*"
