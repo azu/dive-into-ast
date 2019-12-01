@@ -18,7 +18,7 @@
     "mdx-deck": "3.0.13",
     "prettier": "^1.19.1"
   },
-  "name": "dive-to-ast",
+  "name": "dive-into-ast",
   "prettier": {
     "singleQuote": false,
     "printWidth": 120,

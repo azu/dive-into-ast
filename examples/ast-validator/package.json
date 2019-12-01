@@ -2,13 +2,13 @@
   "name": "ast-validator",
   "version": "1.0.0",
   "description": "validate with AST",
-  "homepage": "https://github.com/azu/dive-to-ast/tree/master/examples/ast-validator/",
+  "homepage": "https://github.com/azu/dive-into-ast/tree/master/examples/ast-validator/",
   "bugs": {
-    "url": "https://github.com/azu/dive-to-ast/issues"
+    "url": "https://github.com/azu/dive-into-ast/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/azu/dive-to-ast.git"
+    "url": "https://github.com/azu/dive-into-ast.git"
   },
   "license": "MIT",
   "author": "azu",

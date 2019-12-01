@@ -1,6 +1,6 @@
-# Dive to AST [![Actions Status](https://github.com/azu/dive-to-ast/workflows/test/badge.svg)](https://github.com/azu/dive-to-ast/actions?query=workflow%3Atest)
+# Dive into AST [![Actions Status](https://github.com/azu/dive-into-ast/workflows/test/badge.svg)](https://github.com/azu/dive-into-ast/actions?query=workflow%3Atest)
 
-Dive to AST(Abstract Syntax Tree) in JavaScript.
+Dive into AST(Abstract Syntax Tree) in JavaScript.
 
 You learn AST by creating AST Tools/Libraries.
 
