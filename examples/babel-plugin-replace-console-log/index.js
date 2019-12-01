@@ -1,4 +1,5 @@
-export default function () {
+module.exports = (babel) => {
+    const { types: t } = babel;
     return {
         name: "babel-plugin-replace-console-log",
         visitor: {
@@ -17,4 +18,4 @@ export default function () {
             }
         }
     };
-}
+};

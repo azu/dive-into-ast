@@ -4,8 +4,8 @@ pluginTester({
         plugin: plugin,
         tests: [
             {
-                code: `console.log(1+1)`,
-                output: `log(1+1)`
+                code: `console.log(1 + 1);`,
+                output: `log(1 + 1);`
             }
         ]
     }
