@@ -1,0 +1,16 @@
+{
+  "name": "eslint-plugins-no-eval",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha \"rules/*.test.js\""
+  },
+  "keywords": [],
+  "author": "azu",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "mocha": "^6.2.2"
+  }
+}

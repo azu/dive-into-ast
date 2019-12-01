@@ -1,29 +1,7 @@
-const { parse } = require("acorn");
-const { walk } = require("estree-walker");
-
-const isEval = (node) => {
-    return node.type === "CallExpression"
-        && node.callee
-        && node.callee.type === "Identifier"
-        && node.callee.name === "eval";
-};
-
-export function validate(code) {
-    const AST = parse(code, { locations: true });
-    const errors = [];
-    walk(AST, {
-        enter(node) {
-            if (isEval(node)) {
-                errors.push({
-                    message: "Disallow to use `eval`",
-                    range: node.range,
-                    text: code.slice(node.range[0], node.range[1])
-                })
-            }
-        }
-    });
-    return {
-        ok: errors.length === 0,
-        errors
-    }
-}
+const assert = require("assert");
+const { validate } = require("./index");
+const validationResult = validate(`
+eval(1+1);
+`);
+// result
+assert.deepStrictEqual(validationResult, { "ok": false, "errors": [{ "text": "eval(code)", "range": [19, 29] }] });

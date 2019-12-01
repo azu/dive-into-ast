@@ -1,23 +1,19 @@
-# MDX Deck + Code Surfer template
+# Dive to AST
 
-This project was generated with the `npm init code-surfer-deck` command.
+## Presentations
 
-## Development
+- [ ] URL
 
-To run the presentation deck in development mode:
+## Implementations
 
-```sh
-npm start
-```
+- Validations: `no-eval`
+- [ ] RegExp
+- [ ] AST Validator
+- [ ] ESLint
+- Transforms
+    - [ ] Babel plugins
+    - [ ] JSCodeShift(codemod)
 
-Edit the [`deck.mdx`](deck.mdx) file to get started.
+## License
 
-## Exporting
-
-To build the presentation deck:
-
-```sh
-npm run build
-```
-
-For more documentation see [MDX Deck](https://github.com/jxnblk/mdx-deck) and [Code Surfer](https://codesufer.pomb.us/)
+MIT © AZU

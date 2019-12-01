@@ -1,14 +1,37 @@
 {
   "private": true,
   "version": "1.0.0",
+  "workspaces": [
+    "examples/*"
+  ],
   "scripts": {
     "start": "mdx-deck deck.mdx",
     "build": "mdx-deck build deck.mdx",
-    "test": "echo \"there are no tests\""
+    "test": "echo \"there are no tests\"",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
   },
   "devDependencies": {
     "code-surfer": "3.0.0-beta.1",
-    "mdx-deck": "3.0.13"
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "mdx-deck": "3.0.13",
+    "prettier": "^1.19.1"
   },
-  "name": "dive-to-ast"
+  "name": "dive-to-ast",
+  "prettier": {
+    "singleQuote": false,
+    "printWidth": 120,
+    "tabWidth": 4
+  },
+  "husky": {
+    "hooks": {
+      "precommit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }

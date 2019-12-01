@@ -1,0 +1,12 @@
+{
+  "name": "regexp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.test.js"
+  },
+  "keywords": [],
+  "author": "azu",
+  "license": "MIT"
+}
