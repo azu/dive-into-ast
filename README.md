@@ -19,6 +19,13 @@ You learn AST by creating AST Tools/Libraries.
     - [ ] Babel plugins
     - [ ] JSCodeShift(codemod)
 
+## Tests
+
+This is a monorepo and use [yarn](https://yarnpkg.com/).
+
+    yarn install
+    yarn test
+
 ## License
 
 MIT © Azu
