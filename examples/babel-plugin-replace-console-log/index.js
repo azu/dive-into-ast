@@ -1,6 +1,6 @@
 export default function () {
     return {
-        name: "babel-plugin-no-console",
+        name: "babel-plugin-replace-console-log",
         visitor: {
             CallExpression(path) {
                 // path.get => path

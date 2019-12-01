@@ -1,0 +1,15 @@
+{
+  "name": "jscodeshift-replace-console-log",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jscodeshift -t index.js test.js --dry"
+  },
+  "keywords": [],
+  "author": "azu",
+  "license": "MIT",
+  "devDependencies": {
+    "jscodeshift": "^0.6.4"
+  }
+}

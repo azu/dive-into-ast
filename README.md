@@ -16,8 +16,9 @@ You learn AST by creating AST Tools/Libraries.
     - [x] [Validator using AST](examples/ast-validator)
     - [x] [Validator as ESLint rule](examples/eslint-plugins-no-eval)
 - Transforms
-    - [ ] [Babel plugins](examples/babel-plugin-no-console)
-    - [ ] JSCodeShift(codemod)
+    - [x] [Babel plugins](examples/babel-plugin-no-console): Remove console 
+    - [x] [Babel plugins](examples/babel-plugin-no-console): Replace console 
+    - [x] [JSCodeShift](examples/jscodeshift-replace-console-log): Replace console
 
 ## Tests
 
