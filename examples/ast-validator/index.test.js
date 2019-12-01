@@ -4,4 +4,9 @@ const validationResult = validate(`
 eval(1+1);
 `);
 // result
-assert.deepStrictEqual(validationResult, { "ok": false, "errors": [{ "text": "eval(code)", "range": [19, 29] }] });
+assert.deepStrictEqual(validationResult, {
+    "ok": false,
+    "errors": [
+        { "text": "eval(1+1)", "range": [1, 10] }
+    ]
+});

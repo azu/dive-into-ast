@@ -18,7 +18,9 @@
     "src/"
   ],
   "main": "lib/ast-validator.js",
-  "scripts": {},
+  "scripts": {
+    "test": "node index.test.js"
+  },
   "dependencies": {
     "acorn": "^7.1.0",
     "estree-walker": "^1.0.0"
