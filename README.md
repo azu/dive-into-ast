@@ -1,4 +1,4 @@
-# Dive to AST
+# Dive to AST [![Actions Status](https://github.com/azu/dive-to-ast/workflows/test/badge.svg)](https://github.com/azu/dive-to-ast/actions?query=workflow%3Atest)
 
 Dive to AST(Abstract Syntax Tree) in JavaScript.
 
