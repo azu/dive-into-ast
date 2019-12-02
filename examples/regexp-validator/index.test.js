@@ -8,6 +8,7 @@ assert.deepStrictEqual(validationResult, {
     ok: false,
     errors: [{ text: "eval(1+1)", range: [1, 10] }]
 });
+
 // コメントのevalを誤検知してるパターン
 const validationResult2 = noEval(`
 // eval(1+1); <= THIS IS COMMENT
