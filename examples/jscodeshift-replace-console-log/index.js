@@ -5,7 +5,11 @@ module.exports = function(fileInfo, api) {
         .filter(path => {
             // babel's path
             const callee = path.get("callee");
-            return callee.node.type === "MemberExpression" && callee.node.object.name === "console";
+            return (
+                callee.node.type === "MemberExpression" &&
+                callee.node.object.name === "console" &&
+                callee.property.name === "log"
+            );
         })
         .replaceWith(path => {
             const t = api.jscodeshift;

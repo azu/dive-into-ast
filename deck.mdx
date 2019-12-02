@@ -222,7 +222,6 @@ export const theme = vsDark;
 
 ----
 
-
 <CodeSurferColumns themes={[vsDark, github]}>
 
 <Step>
@@ -286,6 +285,7 @@ export const theme = vsDark;
 - ESLintのルールはロジック部分のみ書く
     - パースやトラバースはESLint側でやってくれる
     - プラグインの仕組み: [JavaScript Plugin Architectureというプラグイン設計について学ぶ無料の電子書籍を書いた](https://efcl.info/2016/06/06/javascript-plugin-architecture/)
+- [ESQuery](https://github.com/estools/esquery)(CSS Query SelectorのAST版)や[便利メソッド](https://eslint.org/docs/developer-guide/working-with-rules)が用意されている
 - エディタやテストなどのツールチェインに組み込みたいときはESLintのルールとして書くと便利
 
 ----
@@ -336,12 +336,197 @@ export const theme = vsDark;
 ```js title="no-console: Babel" file="examples/babel-plugin-no-console/index.js"
 ```
 
-```diff 4 subtitle="ESQueryでevalにマッチ"
+```diff 5:15 subtitle="CallExpressionが来たときに呼ばれる関数"
 ```
 
-```diff 4:9 subtitle="evalのnodeをreportする"
+```diff 7:11 subtitle="CallExpressionががconsole.logかを判定"
+```
+
+```diff 12:15 subtitle="console.logだったらpath.remove削除する"
 ```
 
 </CodeSurfer>
 
 ----
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="実装" file="examples/babel-plugin-no-console/index.js"
+```
+
+
+```js title="テスト" file="examples/babel-plugin-no-console/index.test.js"
+```
+
+</Step>
+
+
+<Step>
+
+```js title="実装" file="examples/babel-plugin-no-console/index.js"
+```
+
+
+```js 5:10 title="テスト" subtitle="入力に対する出力を書くテスト" file="examples/babel-plugin-no-console/index.test.js"
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+----
+
+## Babel
+
+- ASTの変換は結構泥臭い
+- Babelは`path`オブジェクトに便利メソッドをたくさん持っている
+    - `path.remove`でそのNodeを削除できる
+- 先ほどのコードも `matchesPattern` を使うともっと短く書ける
+
+----
+
+<CodeSurfer title="no-console: リファクタリング">
+
+```js subtitle="先ほどの実装" file="examples/babel-plugin-no-console/index.js"
+```
+
+```js subtitle="matchesPatternを使う"
+module.exports = function () {
+    return {
+        name: "babel-plugin-no-console",
+        visitor: {
+            CallExpression(path) {
+                // path has pattern match
+                const isConsole = path.get('callee')
+                    .matchesPattern('console.log');
+                if (isConsole) {
+                    return path.remove();
+                }
+            }
+        }
+    };
+};
+```
+
+</CodeSurfer>
+
+----
+
+# Transform: 置換
+
+- 削除だけではなく別のものへの置換も簡単
+- `path.remove`ではなく`path.replaceWith(node, arguments)`を使う
+- `babel-plugin-replace-console-log`を作ってみる
+    - `console.log(?)` を `log(?)` に置き換える
+
+----
+
+<CodeSurfer title="replace-console: 置換">
+
+```js subtitle="no-console" file="examples/babel-plugin-no-console/index.js"
+```
+
+```js subtitle="replace-console-with-log" file="examples/babel-plugin-replace-console-log/index.js"
+```
+
+</CodeSurfer>
+
+----
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="実装" file="examples/babel-plugin-replace-console-log/index.js"
+```
+
+
+```js title="テスト" file="examples/babel-plugin-replace-console-log/index.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js 12:15 title="実装" file="examples/babel-plugin-replace-console-log/index.js"
+```
+
+
+```js 5:10 title="テスト" subtitle="置換されてる" file="examples/babel-plugin-replace-console-log/index.test.js"
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+----
+
+# Babel
+
+- ドキュメントはいまいちだけど、ASTの便利メソッドがある
+    - replace, remove, [template](https://babeljs.io/docs/en/babel-template), evaluate(静的に実行結果を計算)
+
+----
+
+<CodeSurfer title="no-console: リファクタリング">
+
+
+```js title="今までの実装" file="examples/babel-plugin-replace-console-log/index.js"
+```
+
+
+```js subtitle="babel-templateを使った実装" file="examples/babel-plugin-replace-console-log-template/index.js"
+```
+
+</CodeSurfer>
+
+----
+
+# Transform: jscodeshift
+
+- Babel以外にもコードを変換するツールはある
+- [jscodeshift](https://github.com/facebook/jscodeshift)
+- Reactの[codemod](https://github.com/facebook/codemod)などマイグレーションツールで使われる
+- Babelはビルド向け、jscodeshiftはgrep+sedなどような大量のファイル変更向け
+- [jscodeshift](https://github.com/facebook/jscodeshift)も内部的にBabelのパーサを使う
+    - JavaScriptやTypeScriptを処理できるため
+
+----
+
+# Transform: jscodeshift
+
+- [jscodeshift](https://github.com/facebook/jscodeshift)はVisitorパターンではない
+- jQueryやDOM APIようなコレクションAPIでASTを操作していく
+- ESLint, Babel: トラバースの待ち受けを処理を書く(トップダウン)
+- jscodeshift: 変換したいNodeを探して処理を書く(ボトムアップ)
+
+----
+
+<CodeSurfer title="replace-console: jscodeshift">
+
+```js title="replace-console-with-log" file="examples/jscodeshift-replace-console-log/index.js"
+```
+
+```diff 2:3 subtitle="ソースを読む"
+```
+
+```diff 4 subtitle="CallExpressionを探す"
+```
+
+```diff 5:13 subtitle="CallExpressionがconsole.logだけに絞る"
+```
+
+```diff 14:18 subtitle="console.logをlogに置換する"
+```
+
+
+```diff 19 subtitle="変換結果をソースに戻す"
+```
+
+```diff subtitle="console.log -> log"
+```
+
+</CodeSurfer>

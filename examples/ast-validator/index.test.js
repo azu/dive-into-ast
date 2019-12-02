@@ -8,6 +8,7 @@ assert.deepStrictEqual(validationResult, {
     ok: false,
     errors: [{ text: "eval(1+1)", range: [1, 10] }]
 });
+
 // コメントはコメントとして認識する
 const validationResult2 = validate(`
 // eval(1+1);
