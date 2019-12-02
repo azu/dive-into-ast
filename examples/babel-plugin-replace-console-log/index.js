@@ -4,11 +4,11 @@ module.exports = babel => {
         name: "babel-plugin-replace-console-log",
         visitor: {
             CallExpression(path) {
-                // path.get => callee's path
-                const callee = path.get("callee");
+                const callee = path.node.callee;
                 const isConsole =
-                    callee.node.type === "MemberExpression" &&
-                    callee.node.object.name === "console";
+                    callee.type === "MemberExpression" &&
+                    callee.object.name === "console" &&
+                    callee.property.name === "log";
                 if (isConsole) {
                     // replace `console.log` with `log`
                     const originalArguments = path.node.arguments;

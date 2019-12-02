@@ -1,13 +1,14 @@
-module.exports = function() {
+module.exports = function () {
     return {
         name: "babel-plugin-no-console",
         visitor: {
             CallExpression(path) {
-                // path.get => callee's path
-                const callee = path.get("callee");
+                // path is wrapper of node + api
+                const callee = path.node.callee;
                 const isConsole =
-                    callee.node.type === "MemberExpression" &&
-                    callee.node.object.name === "console";
+                    callee.type === "MemberExpression" &&
+                    callee.object.name === "console" &&
+                    callee.property.name === "log";
                 if (isConsole) {
                     return path.remove();
                 }
