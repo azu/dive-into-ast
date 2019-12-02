@@ -3,19 +3,161 @@ import {
   CodeSurferColumns,
   Step,
 } from "code-surfer";
-import { github, vsDark } from "@code-surfer/themes";
+import { github, vsDark, dracula } from "@code-surfer/themes";
+import { Notes } from 'mdx-deck'
 
-export const theme = vsDark;
+
+export const theme = github;
 
 # Dive into AST
 
 ----
 
+# 自己紹介
+
+![アイコン right](https://github.com/azu.png)
+
+- Name : **azu**
+- Twitter : @[azu_re](https://twitter.com/azu_re)
+- Website: [Web scratch], [JSer.info]
+
+[Web scratch]: http://efcl.info/ "Web scratch"
+[JSer.info]: http://jser.info/ "JSer.info"
+
+----
+
+
+# AST(Abstract Syntax Tree)
+
+- ASTとは抽象構文木
+- ソースコードを抽象的な表現にしたもの
+    - スペースなどプログラムとして違いがない部分は無視
+- JavaScriptでは多くのASTはJSONで表現される
+    - LLVMとかWebAssemblyはS式だったり色々
+
+----
+
+# なぜAST?
+
+- ソースコードじゃなくてなぜASTを扱う?
+- 大部分の目的はツールから扱いやすくするため
+- ソースコードは本質とは関係ないノイズが多く扱いにくい
+- 正規表現ではスペースやインデントなどが自由に入るパターンに対応できない
+
+----
+
+# 次のコードはすべて同じ意味
+
+----
+
+<Notes>
+すべて同じ意味。
+スペースが入力できないキーボードが書いてるのかもしれない。
+Enter押すたびに変なインデントが入るエディタなのかもしれない。
+1行で書きたいのかもしれない
+</Notes>
+
+<CodeSurferColumns themes={[vsDark, github, dracula]}>
+
+<Step>
+
+```js
+const name = "Tom";
+alert(name);
+```
+
+```js
+const
+name
+=
+'Tom';
+alert(name)
+```
+
+</Step>
+
+<Step>
+
+
+```js
+const name =
+ 'Tom';
+    alert(
+        name
+            )
+```
+
+```js
+const name='Tom';alert(name);
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+----
+
+## なぜASTを知っていると嬉しいの?
+
+- ツールを作れる
+- ツールに優しいコードを書けるようになる
+    - Lint、 Prettierの気持ちが分かる
+- 新しいフォーマットを作るときに意識しておくとポータビリティが高くなる
+    - 独自フォーマットは独自になる可能性がとても高い。移行できない
+- 技術的に学べる部分が多い
+    - Visitorパターン、木構造、メモ化、プラグイン、Commandパターン
+- プログラミングの幅が広がる
+
+----
+
+## ポータビリティと移行しやすさ
+
+- ポータビリティ、移行正、バリデーション、既存ライブラリが使える、柔軟性があがる
+- マイグレーションツールが書ける
+- ポータビリティがないと一回作ったものを完全に捨てるしかなくなる
+- ASTがある = 著名なテキストフォーマット という式が大体成立する世の中
+    - 逆に独自構文でパーサーを持っていない場合は要注意
+
+----
+
+## ポータビリティ
+
+- パースができるとインクリメンタルに変化しやすい
+- パースできないとインクリメンタルな変化が難しい
+    - たとえばインポート、エクスポート出来ないサービスを使うと移行時に辛い
+    - パトロン(export機能がない) -> ブログに移行とか
+    - 一回捨てるか、まとめて気合で移行みたいなことがおきがち
+    - ツール化できないと線形的に労力がかかる
+
+----
+
+## ポータビリティを気にしすぎる問題
+
+- 構文が縛られる、スピード
+- 完全使い捨てる ものならいいけど、そうでないものがほとんど
+- なので、今は気にしたほうがコスパがよい
+
+---
+
+# とにかく作ってみよう
+
+- Validations: チェックツール
+    - [Validator using RegExp](https://github.com/azu/dive-into-ast/tree/master/examples/regexp-validator)
+    - [Validator using AST](https://github.com/azu/dive-into-ast/tree/master/examples/ast-validator)
+    - [Validator as ESLint rule](https://github.com/azu/dive-into-ast/tree/master/examples/eslint-plugins-no-eval)
+- Transforms: 変換ツール
+    - [Babel plugins](https://github.com/azu/dive-into-ast/tree/master/examples/babel-plugin-no-console): Remove console
+    - [Babel plugins](https://github.com/azu/dive-into-ast/tree/master/examples/babel-plugin-no-console): Replace console
+    - [JSCodeShift](https://github.com/azu/dive-into-ast/tree/master/examples/jscodeshift-replace-console-log): Replace console
+
+---
+
+
 ## no-eval: 正規表現
 
 - 正規表現で `eval(?)` を使っているのを見つけるバリデーションを実装
-- `eval`があったら `{ ok: false, error: { text: string, range: [number, number] }[] }` を返す
-
+- `eval(code)` があったら バリデーションエラー を返す
 
 ----
 
@@ -284,7 +426,7 @@ export const theme = vsDark;
 
 - ESLintのルールはロジック部分のみ書く
     - パースやトラバースはESLint側でやってくれる
-    - プラグインの仕組み: [JavaScript Plugin Architectureというプラグイン設計について学ぶ無料の電子書籍を書いた](https://efcl.info/2016/06/06/javascript-plugin-architecture/)
+    - プラグインの仕組み: [JavaScript Plugin Architecture](https://efcl.info/2016/06/06/javascript-plugin-architecture/)
 - [ESQuery](https://github.com/estools/esquery)(CSS Query SelectorのAST版)や[便利メソッド](https://eslint.org/docs/developer-guide/working-with-rules)が用意されている
 - エディタやテストなどのツールチェインに組み込みたいときはESLintのルールとして書くと便利
 
@@ -314,7 +456,7 @@ export const theme = vsDark;
 
 ----
 
-## Transform: Babel
+## Babel
 
 - BabelはJavaScript ASTの変換プラットフォームとして使える
 - Babel変換処理をプラグインとして実装できる
@@ -322,7 +464,7 @@ export const theme = vsDark;
 
 ----
 
-# no-console: Babel
+# Babel: no-console
 
 - 目的: `console.log`をproductionビルドから取り除きたい
 - `console.log`を取り除く仕組みをBabelプラグインとして実装する
@@ -380,9 +522,10 @@ export const theme = vsDark;
 
 ## Babel
 
-- ASTの変換は結構泥臭い
-- Babelは`path`オブジェクトに便利メソッドをたくさん持っている
-    - `path.remove`でそのNodeを削除できる
+- 通常のAST変換は結構泥臭いことが必要
+    - 特定の部分を削除するのにも独自実装が必要
+- 一方、Babelは`path`オブジェクトに便利メソッドをたくさん持っている
+    - `path.remove`でNodeを削除できる
 - 先ほどのコードも `matchesPattern` を使うともっと短く書ける
 
 ----
@@ -414,7 +557,7 @@ module.exports = function () {
 
 ----
 
-# Babel: 置換
+# Babelで置換
 
 - 削除だけではなく別のものへの置換も簡単
 - `path.remove`ではなく`path.replaceWith(ast)`を使う
@@ -453,7 +596,6 @@ module.exports = function () {
 ```js 12:15 title="実装" file="examples/babel-plugin-replace-console-log/index.js"
 ```
 
-
 ```js 5:10 title="テスト" subtitle="置換されてる" file="examples/babel-plugin-replace-console-log/index.test.js"
 ```
 
@@ -486,18 +628,19 @@ module.exports = function () {
 
 ----
 
-# Transform: jscodeshift
+# [jscodeshift](https://github.com/facebook/jscodeshift)
 
 - Babel以外にもコードを変換するツールはある
 - [jscodeshift](https://github.com/facebook/jscodeshift)
-- Reactの[codemod](https://github.com/facebook/codemod)などマイグレーションツールで使われる
-- Babelはビルド向け、jscodeshiftはgrep+sedなどような大量のファイル変更向け
-- [jscodeshift](https://github.com/facebook/jscodeshift)も内部的にBabelのパーサを使う
-    - JavaScriptやTypeScriptを処理できるため
+    - Reactの[codemod](https://github.com/facebook/codemod)などマイグレーションツールで使われる
+- ASTを扱う sed のようなツール
+    - [grasp](https://www.graspjs.com/)もあったが最近更新されてない
+- jscodeshift内部的にBabelのパーサを使える
+    - JavaScriptやTypeScriptを処理できる
 
 ----
 
-# Transform: jscodeshift
+# jscodeshiftで変換
 
 - [jscodeshift](https://github.com/facebook/jscodeshift)はVisitorパターンではない
 - jQueryやDOM APIのようなコレクションAPIでASTを操作していく
@@ -505,6 +648,10 @@ module.exports = function () {
 - jscodeshift: 変換したいNodeを探して処理を書く(ボトムアップ)
 - マイグレーションツールを書く際におすすめ
     - CLIにdry-runや並列処理などがあり大量のファイルを処理できる
+
+----
+
+# jscodeshiftで`console.log`を`log`に変換する
 
 ----
 
@@ -554,3 +701,14 @@ module.exports = function () {
     - ビルド処理の一部として
 - jscodeshift
     - マイグレーションツールとして
+
+----
+
+# ASTとは
+
+- ただのJSONです
+- エコシステムに乗れば`String#replace`と書く労力はそんな変わらないです
+    - 難しい正規表現よりは簡単
+- ASTはJavaScriptだけに限りません
+    - テンプレートにもある、設定ファイルにもある、デザインツールにもある
+
