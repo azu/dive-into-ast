@@ -1,12 +1,12 @@
 module.exports = {
-    create: (context) => {
+    create: context => {
         return {
-            "CallExpression > Identifier[name=eval]": (node) => {
+            "CallExpression > Identifier[name=eval]"(node) {
                 context.report({
                     message: "Don't use eval",
-                    node,
+                    node
                 });
-            },
+            }
         };
-    },
+    }
 };

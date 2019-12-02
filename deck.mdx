@@ -117,30 +117,24 @@ export const theme = vsDark;
 ```diff 5 subtitle="コードをASTにパースする"
 ```
 
-```diff 7:20 subtitle="ASTをトラバースし、各Nodeごとに判定処理"
+```diff 7:21 subtitle="ASTをトラバースし、各Nodeごとに判定処理"
 ```
 
-```diff 9:13 subtitle="Nodeがeval呼び出しかを判定"
+```diff 9:14 subtitle="Nodeがeval呼び出しかを判定"
 ```
 
-```diff 9:12 subtitle="isEval: 関数呼び出しで名前がevalかを判定"
+```diff 9:13 subtitle="isEval: 関数呼び出しで名前がevalかを判定"
 ```
 
-```diff 13:18 subtitle="evalだったらエラー結果に追加"
+```diff 13:19 subtitle="evalだったらエラー結果に追加"
 ```
 
-```diff 21:24 subtitle="エラーがあったらok:falseを返す"
+```diff 22:25 subtitle="エラーがあったらok:falseを返す"
 ```
 
 </CodeSurfer>
 
 ----
-
-## no-eval: ASTの問題
-
-- 正規表現よりきっちりと対応できる(意図しない見逃しは減る)
-- `eval`という関数を独自に定義されていた場合にfalse-positiveになる
-
 
 <CodeSurferColumns themes={[vsDark, github]}>
 
@@ -169,16 +163,173 @@ export const theme = vsDark;
 ```js title="実装" file="examples/ast-validator/index.js"
 ```
 
+```js 13:20 title="テスト" subtitle="コメントを誤検知しない" file="examples/ast-validator/index.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js 8:20 title="実装" subtitle="CallExpressionかを判定するため" file="examples/ast-validator/index.js"
+```
+
 ```js 13:20 title="テスト" subtitle="コメントは誤検知しない" file="examples/ast-validator/index.test.js"
 ```
 
 </Step>
 
 
+</CodeSurferColumns>
+
+----
+
+
+## no-eval: AST
+
+- 正規表現よりきっちりと対応できる(意図しない見逃しは減る)
+- ツールやライブラリの一部として処理を組み込みやすい
+- 開発環境のツールチェインとして組み込むならESLintやBabelなどのエコシステムに乗せる
+
+----
+
+## no-eval: ESLint
+
+----
+
+
+## no-eval: ESLint
+
+- ESLintのルールとしてno-evalを実装してみる
+    - [公式版もある](https://eslint.org/docs/rules/no-eval)けど今回はサンプルとして
+- ESLintは[Espree](https://github.com/eslint/espree)をパーサとして使う
+    - [Acorn](https://github.com/acornjs/acorn)ベースだけど、ASTが[ESTree](https://github.com/estree/estree)互換
+- トラバースはESLint側でやってくれるのでVisitorを書いていくだけ
+
+----
+
+<CodeSurfer title="no-eval: ESLintでの実装">
+
+```js title="no-eval: ESLint" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+```diff 4 subtitle="ESQueryでevalにマッチ"
+```
+
+```diff 4:9 subtitle="evalのnodeをreportする"
+```
+
+</CodeSurfer>
+
+----
+
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="実装" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+
+```js title="テスト" file="examples/eslint-plugins-no-eval/rules/no-eval.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+```js 1 title="テスト" subtitle="RuleTesterを読み込む" file="examples/eslint-plugins-no-eval/rules/no-eval.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+```js 4:16 title="テスト" subtitle="テストケースを書く" file="examples/eslint-plugins-no-eval/rules/no-eval.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+```js 6:9 title="テスト" subtitle="valid:エラーじゃないパターン" file="examples/eslint-plugins-no-eval/rules/no-eval.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/eslint-plugins-no-eval/rules/no-eval.js"
+```
+
+```js 10:15 title="テスト" subtitle="invalid:エラーとなるパターン" file="examples/eslint-plugins-no-eval/rules/no-eval.test.js"
+```
+
+</Step>
+
 
 </CodeSurferColumns>
 
 ----
 
-docs:
-[codesurfer.pomb.us](https://codesurfer.pomb.us)
+## no-eval: ESLint
+
+- ESLintのルールはロジック部分のみ書く
+    - パースやトラバースはESLint側でやってくれる
+    - プラグインの仕組み: [JavaScript Plugin Architectureというプラグイン設計について学ぶ無料の電子書籍を書いた](https://efcl.info/2016/06/06/javascript-plugin-architecture/)
+- エディタやテストなどのツールチェインに組み込みたいときはESLintのルールとして書くと便利
+
+----
+
+## 類似するAST Lintツール
+
+- 似た仕組みのLintツールが色々な言語向けにある
+    - CSS: [stylelint](https://stylelint.io/)
+    - 自然言語: [textlint](https://textlint.github.io/)
+- 一度仕組みを覚えれば、いろんなツールのルールが作りやすくなる
+
+----
+
+
+# Transform
+
+----
+
+## Transform
+
+- LintはNodeをチェックして報告するだけだったので簡単
+    - コードをASTにパースして、ASTをチェックするだけ
+- コードを変換しようとすると、手書きは結構難しい
+    - コードをASTにパースして、ASTを変換して、ASTをコードに戻す
+    - 3ステップになる
+
+----
+
+## Transform: Babel
+
+- BabelはJavaScript ASTの変換プラットフォームとして使える
+- Babel変換処理をプラグインとして実装できる
+
+
+----
+
+# no-console: Babel
+
+- 目的: `console.log`をproductionビルドから取り除きたい
+- `console.*`を取り除く仕組みをBabelプラグインとして実装する
+- BabelのパーサはBabel独自、トラバースはBabel側でやってくれる
+
+----
+
+
+
+----

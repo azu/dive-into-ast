@@ -10,7 +10,7 @@ tester.run("no-eval", rule, {
     invalid: [
         {
             code: `eval(1+1)`,
-            errors: [{ message: "Don't use eval" }],
+            errors: [{ message: "Don't use eval" }]
         }
-    ],
+    ]
 });

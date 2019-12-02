@@ -1,11 +1,11 @@
-module.exports = function (fileInfo, api) {
-    return api.jscodeshift(fileInfo.source)
+module.exports = function(fileInfo, api) {
+    return api
+        .jscodeshift(fileInfo.source)
         .find("CallExpression")
         .filter(path => {
             // babel's path
             const callee = path.get("callee");
-            return callee.node.type === 'MemberExpression'
-                && callee.node.object.name === 'console';
+            return callee.node.type === "MemberExpression" && callee.node.object.name === "console";
         })
         .replaceWith(path => {
             const t = api.jscodeshift;

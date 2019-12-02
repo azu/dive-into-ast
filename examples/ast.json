@@ -1,0 +1,13 @@
+{
+  "type": "CallExpression",
+  "callee": {
+    "type": "Identifier",
+    "name": "eval"
+  },
+  "arguments": [
+    {
+      "type": "NumericLiteral",
+      "value": 1
+    }
+  ]
+}

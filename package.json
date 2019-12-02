@@ -21,7 +21,7 @@
   "name": "dive-into-ast",
   "prettier": {
     "singleQuote": false,
-    "printWidth": 120,
+    "printWidth": 100,
     "tabWidth": 4
   },
   "husky": {
