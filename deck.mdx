@@ -325,11 +325,23 @@ export const theme = vsDark;
 # no-console: Babel
 
 - 目的: `console.log`をproductionビルドから取り除きたい
-- `console.*`を取り除く仕組みをBabelプラグインとして実装する
+- `console.log`を取り除く仕組みをBabelプラグインとして実装する
 - BabelのパーサはBabel独自、トラバースはBabel側でやってくれる
 
 ----
 
 
+<CodeSurfer title="no-console: Babel">
+
+```js title="no-console: Babel" file="examples/babel-plugin-no-console/index.js"
+```
+
+```diff 4 subtitle="ESQueryでevalにマッチ"
+```
+
+```diff 4:9 subtitle="evalのnodeをreportする"
+```
+
+</CodeSurfer>
 
 ----

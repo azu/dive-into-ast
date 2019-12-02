@@ -12,7 +12,7 @@ assert.deepStrictEqual(validationResult, {
 const validationResult2 = validate(`
 // eval(1+1);
 `);
-assert.deepStrictEqual(validationResult, {
+assert.deepStrictEqual(validationResult2, {
     ok: true,
     errors: []
 });

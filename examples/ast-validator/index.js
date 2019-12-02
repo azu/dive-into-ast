@@ -1,7 +1,7 @@
 const { parse } = require("acorn");
 const { walk } = require("estree-walker");
 
-module.exports.validate = function(code) {
+module.exports.validate = function (code) {
     const AST = parse(code, { range: true });
     const errors = [];
     walk(AST, {
