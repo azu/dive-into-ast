@@ -414,7 +414,7 @@ module.exports = function () {
 
 ----
 
-# Transform: 置換
+# Babel: 置換
 
 - 削除だけではなく別のものへの置換も簡単
 - `path.remove`ではなく`path.replaceWith(node, arguments)`を使う
@@ -468,6 +468,7 @@ module.exports = function () {
 
 - ドキュメントはいまいちだけど、ASTの便利メソッドがある
     - replace, remove, [template](https://babeljs.io/docs/en/babel-template), evaluate(静的に実行結果を計算)
+- ビルド時の変換を行いたいならとりあえずBabelで実装するのをおすすめ
 
 ----
 
@@ -499,9 +500,11 @@ module.exports = function () {
 # Transform: jscodeshift
 
 - [jscodeshift](https://github.com/facebook/jscodeshift)はVisitorパターンではない
-- jQueryやDOM APIようなコレクションAPIでASTを操作していく
+- jQueryやDOM APIのようなコレクションAPIでASTを操作していく
 - ESLint, Babel: トラバースの待ち受けを処理を書く(トップダウン)
 - jscodeshift: 変換したいNodeを探して処理を書く(ボトムアップ)
+- マイグレーションツールを書く際におすすめ
+    - CLIにdry-runや並列処理などがあり大量のファイルを処理できる
 
 ----
 
@@ -529,3 +532,25 @@ module.exports = function () {
 ```
 
 </CodeSurfer>
+
+----
+
+# Transform + Prettier
+
+- ASTはスペースなどプログラムとして意味のない部分には興味がない
+    - そのため変換して出力されるコードは汚い場合がある
+- これは[Prettier](https://prettier.io)が解決できる
+    - Prettierによって変換結果を整形すれば、変換ツールは出力コードの見た目を気にしなくすむ
+
+-----
+
+# ASTを使ったいろんなツール
+
+- 自作
+    - ライブラリとしてアプリケーションに組み込みやすい
+- ESLint
+    - 開発環境の一部として
+- Babel
+    - ビルド処理の一部として
+- jscodeshift
+    - マイグレーションツールとして
