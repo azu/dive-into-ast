@@ -417,7 +417,7 @@ module.exports = function () {
 # Babel: 置換
 
 - 削除だけではなく別のものへの置換も簡単
-- `path.remove`ではなく`path.replaceWith(node, arguments)`を使う
+- `path.remove`ではなく`path.replaceWith(ast)`を使う
 - `babel-plugin-replace-console-log`を作ってみる
     - `console.log(?)` を `log(?)` に置き換える
 
