@@ -7,92 +7,33 @@ import { github, vsDark } from "@code-surfer/themes";
 
 export const theme = vsDark;
 
-# Hello 👋
+# Dive into AST
 
-You are using [MDX Deck](https://github.com/jxnblk/mdx-deck) and [Code Surfer](https://codesurfer.pomb.us)
+----
 
----
+## no-eval: 正規表現
+
+- 正規表現で `eval(?)` を使っているのを見つけるバリデーションを実装
+- `eval`があったら `{ ok: false, error: { text: string, range: [number, number] }[] }` を返す
+
+
+----
+
 
 <CodeSurfer>
 
-```js title="This is a title" subtitle="and this a subtitle"
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
+```js title="no-eval: 正規表現での実装" file="examples/regexp-validator/index.js"
 ```
 
-```js
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function adipiscing(...elit) {
-  if (!elit.sit) {
-    return [];
-  }
-
-  const sed = elit[0];
-  return eiusmod.tempor(sed) ? sed : [sed];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
+```diff 2 subtitle="evalにマッチするパターン"
 ```
 
-```diff 1[10:14],2[15:19],3[22:27],10:12
-
+```diff 5:9 subtitle="パターンにマッチした部分を見つけたらエラー結果に追加"
 ```
+
+```diff 11:14 subtitle="エラー結果があるならok:falseを返す"
+```
+
 
 </CodeSurfer>
 
@@ -102,51 +43,142 @@ function incididunt(ipsum, ut = 1) {
 
 <Step>
 
-```js
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
+```js title="実装" file="examples/regexp-validator/index.js"
 ```
 
-```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
+
+```js title="テスト" file="examples/regexp-validator/index.test.js"
 ```
 
 </Step>
 
 <Step>
 
-```js
-const lorem = (ipsum, dolor, sit) => {
-  const amet = dolor - ipsum;
-  return consectetur.adipiscing(
-    {
-      elit: sed.eiusmod(sit - dolor) / amet + 2,
-    },
-    (tempor, incididunt) => ipsum + amet * incididunt
-  );
-};
-
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
+```js title="実装" file="examples/regexp-validator/index.js"
 ```
 
-```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
 
-const sed = (eiusmod, tempor, incididunt) => {
-  const ut = tempor - eiusmod;
-  return labore.et(
-    {
-      amet: dolore.magna(incididunt - tempor) / ut + 2,
-    },
-    (aliqua, elit) => eiusmod + ut * elit
-  );
-};
+```diff 3:12 title="テスト" subtitle="上手く判定できてるパターン"
 ```
 
 </Step>
 
+
+
+<Step>
+
+```js title="実装" file="examples/regexp-validator/index.js"
+```
+
+
+```diff 13:22 title="テスト" subtitle="誤検知しているパターン"
+```
+
+</Step>
+
+<Step>
+
+```js 2 title="実装" subtitle="正規表現だけではコメント内かは判断できない"  file="examples/regexp-validator/index.js"
+```
+
+
+```diff 13:22 title="テスト" subtitle="誤検知しているパターン"
+```
+
+</Step>
+
+
 </CodeSurferColumns>
 
----
+----
 
-docs:  
+## no-eval: 正規表現の問題
+
+- 正規表現は簡単だが問題を2つに増やす
+- コメント中やスペースの有無には対応しにくい
+- 正規表現でソースコードのような柔軟なものはマッチするのが困難
+- ブラックリストの実装は抜けが多くなりやすい
+- ホワイトリストの実装は正規表現がやりやすい
+
+----
+
+## no-eval: AST
+
+- ASTを使って同じno-evalを実装する
+- パーサには[acorn](https://github.com/acornjs/acorn)、Traversalには[estree-walker](https://github.com/Rich-Harris/estree-walker)
+
+----
+
+<CodeSurfer title="no-eval: ASTでの実装">
+
+```js title="no-eval: ASTでの実装" file="examples/ast-validator/index.js"
+```
+
+```diff 5 subtitle="コードをASTにパースする"
+```
+
+```diff 7:20 subtitle="ASTをトラバースし、各Nodeごとに判定処理"
+```
+
+```diff 9:13 subtitle="Nodeがeval呼び出しかを判定"
+```
+
+```diff 9:12 subtitle="isEval: 関数呼び出しで名前がevalかを判定"
+```
+
+```diff 13:18 subtitle="evalだったらエラー結果に追加"
+```
+
+```diff 21:24 subtitle="エラーがあったらok:falseを返す"
+```
+
+</CodeSurfer>
+
+----
+
+## no-eval: ASTの問題
+
+- 正規表現よりきっちりと対応できる(意図しない見逃しは減る)
+- `eval`という関数を独自に定義されていた場合にfalse-positiveになる
+
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="実装" file="examples/ast-validator/index.js"
+```
+
+```js title="テスト" file="examples/ast-validator//index.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/ast-validator/index.js"
+```
+
+```js 3:12 title="テスト" subtitle="evalを判定できてる" file="examples/ast-validator/index.test.js"
+```
+
+</Step>
+
+<Step>
+
+```js title="実装" file="examples/ast-validator/index.js"
+```
+
+```js 13:20 title="テスト" subtitle="コメントは誤検知しない" file="examples/ast-validator/index.test.js"
+```
+
+</Step>
+
+
+
+</CodeSurferColumns>
+
+----
+
+docs:
 [codesurfer.pomb.us](https://codesurfer.pomb.us)
