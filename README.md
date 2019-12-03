@@ -8,6 +8,8 @@ You learn AST by creating AST Tools/Libraries.
 ## Presentations
 
 - <https://dive-into-ast.netlify.com/> (Japanese)
+    - Prev page: <kbd>←</kbd>
+    - Next page: <kbd>→</kbd>
 
 ## Implementations
 
