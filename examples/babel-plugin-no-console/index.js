@@ -3,7 +3,7 @@ module.exports = function () {
         name: "babel-plugin-no-console",
         visitor: {
             CallExpression(path) {
-                // path is wrapper of node + api
+                // path is wrapper of AST's node
                 const callee = path.node.callee;
                 const isConsole =
                     callee.type === "MemberExpression" &&

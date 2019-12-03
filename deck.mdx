@@ -7,7 +7,7 @@ import { github, vsDark, dracula } from "@code-surfer/themes";
 import { Notes } from 'mdx-deck'
 
 
-export const theme = github;
+export const theme = vsDark;
 
 # Dive into AST
 
@@ -37,16 +37,190 @@ export const theme = github;
 
 ----
 
+# JavaScriptのAST
+
+----
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="コード"
+var a = 1;
+```
+
+```js title="AST"
+{
+  "range": [0, 10],
+  "type": "Program",
+  "body": [
+    {
+      "range": [0, 10],
+      "type": "VariableDeclaration",
+      "kind": "var"
+      "declarations": [
+        {
+          "range": [4, 9],
+          "type": "VariableDeclarator",
+          "id": {
+            "range": [4, 5],
+            "type": "Identifier",
+            "name": "a"
+          },
+          "init": {
+            "range": [8, 9],
+            "type": "Literal",
+            "value": 1,
+            "raw": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+</Step>
+
+<Step>
+
+```js 1[1:3] title="コード" subtitle="var"
+var a = 1;
+```
+
+```js 5:26 title="AST" subtitle="varのNode"
+{
+  "range": [0, 10],
+  "type": "Program",
+  "body": [
+    {
+      "range": [0, 10],
+      "type": "VariableDeclaration",
+      "kind": "var"
+      "declarations": [
+        {
+          "range": [4, 9],
+          "type": "VariableDeclarator",
+          "id": {
+            "range": [4, 5],
+            "type": "Identifier",
+            "name": "a"
+          },
+          "init": {
+            "range": [8, 9],
+            "type": "Literal",
+            "value": 1,
+            "raw": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+</Step>
+
+<Step>
+
+```js 1[5:6] title="コード" subtitle="変数名"
+var a = 1;
+```
+
+```js 13:16 title="AST" subtitle="変数aのNode"
+{
+  "range": [0, 10],
+  "type": "Program",
+  "body": [
+    {
+      "range": [0, 10],
+      "type": "VariableDeclaration",
+      "kind": "var"
+      "declarations": [
+        {
+          "range": [4, 9],
+          "type": "VariableDeclarator",
+          "id": {
+            "range": [4, 5],
+            "type": "Identifier",
+            "name": "a"
+          },
+          "init": {
+            "range": [8, 9],
+            "type": "Literal",
+            "value": 1,
+            "raw": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+</Step>
+
+
+<Step>
+
+```js 1[9:10] title="コード" subtitle="値は数値"
+var a = 1;
+```
+
+```js 17:23 title="AST" subtitle="NumberLiteral"
+{
+  "range": [0, 10],
+  "type": "Program",
+  "body": [
+    {
+      "range": [0, 10],
+      "type": "VariableDeclaration",
+      "kind": "var"
+      "declarations": [
+        {
+          "range": [4, 9],
+          "type": "VariableDeclarator",
+          "id": {
+            "range": [4, 5],
+            "type": "Identifier",
+            "name": "a"
+          },
+          "init": {
+            "range": [8, 9],
+            "type": "Literal",
+            "value": 1,
+            "raw": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+
+----
+
 # なぜAST?
 
 - ソースコードじゃなくてなぜASTを扱う?
 - 大部分の目的はツールから扱いやすくするため
+    - 表記ゆれがない、位置情報が各Nodeにある
 - ソースコードは本質とは関係ないノイズが多く扱いにくい
 - 正規表現ではスペースやインデントなどが自由に入るパターンに対応できない
 
 ----
 
-# 次のコードはすべて同じ意味
+# 次のコードはすべて同じASTになる
 
 ----
 
@@ -98,23 +272,20 @@ const name='Tom';alert(name);
 
 ----
 
-## なぜASTを知っていると嬉しいの?
+## ASTを知っていると嬉しいの?
 
 - ツールを作れる
 - ツールに優しいコードを書けるようになる
-    - Lint、 Prettierの気持ちが分かる
 - 新しいフォーマットを作るときに意識しておくとポータビリティが高くなる
-    - 独自フォーマットは独自になる可能性がとても高い。移行できない
 - 技術的に学べる部分が多い
-    - Visitorパターン、木構造、メモ化、プラグイン、Commandパターン
+    - Command、Visitorパターン、木構造、メモ化、プラグイン
 - プログラミングの幅が広がる
 
 ----
 
-## ポータビリティと移行しやすさ
+## ポータビリティ
 
-- ポータビリティ、移行正、バリデーション、既存ライブラリが使える、柔軟性があがる
-- マイグレーションツールが書ける
+- 移行のしやすい、バリデーション、既存ライブラリが使える、柔軟性があがる
 - ポータビリティがないと一回作ったものを完全に捨てるしかなくなる
 - ASTがある = 著名なテキストフォーマット という式が大体成立する世の中
     - 逆に独自構文でパーサーを持っていない場合は要注意
@@ -205,8 +376,6 @@ const name='Tom';alert(name);
 
 </Step>
 
-
-
 <Step>
 
 ```js title="実装" file="examples/regexp-validator/index.js"
@@ -229,7 +398,6 @@ const name='Tom';alert(name);
 
 </Step>
 
-
 </CodeSurferColumns>
 
 ----
@@ -248,6 +416,11 @@ const name='Tom';alert(name);
 
 - ASTを使って同じno-evalを実装する
 - パーサには[acorn](https://github.com/acornjs/acorn)、Traversalには[estree-walker](https://github.com/Rich-Harris/estree-walker)
+- ASTは <https://astexplorer.net/> で確認しよう！
+
+----
+
+[![AST Explorer](static/ast-explorer.png)](https://astexplorer.net/)
 
 ----
 
@@ -481,10 +654,10 @@ const name='Tom';alert(name);
 ```diff 5:15 subtitle="CallExpressionが来たときに呼ばれる関数"
 ```
 
-```diff 7:11 subtitle="CallExpressionががconsole.logかを判定"
+```diff 7:11 subtitle="CallExpressionがconsole.logかを判定"
 ```
 
-```diff 12:15 subtitle="console.logだったらpath.remove削除する"
+```diff 12:15 subtitle="path(node)がconsole.logだったら削除する"
 ```
 
 </CodeSurfer>
@@ -635,7 +808,7 @@ module.exports = function () {
     - Reactの[codemod](https://github.com/facebook/codemod)などマイグレーションツールで使われる
 - ASTを扱う sed のようなツール
     - [grasp](https://www.graspjs.com/)もあったが最近更新されてない
-- jscodeshift内部的にBabelのパーサを使える
+- jscodeshiftは内部的にBabelのパーサを使える
     - JavaScriptやTypeScriptを処理できる
 
 ----
@@ -661,7 +834,7 @@ module.exports = function () {
 ```diff 2:3 subtitle="ソースを読む"
 ```
 
-```diff 4 subtitle="CallExpressionを探す"
+```diff 4 subtitle="CallExpression(関数呼び出し)を探す"
 ```
 
 ```diff 5:13 subtitle="CallExpressionがconsole.logだけに絞る"
@@ -712,9 +885,37 @@ module.exports = function () {
 
 ----
 
+# ASTじゃできないこと
+
+- ASTは静的にしかチェックできません
+- 動的な部分を静的にチェックするには限界があります
+- 例: `req` になにが入るかはASTでは分からない
+
+
+```js
+exports.handler = (req) => {
+    // req は外から受けとる
+}
+```
+
+----
+
 ## まとめ
+
+- ASTは過度に難しくはない
+- 最近だとTypeScriptでも書けるようになったので、Nodeの型とか見れば分かる
+- https://astexplorer.net/ が便利です
+- ASTに優しいコードを書くと人間にも優しいコードになります
 
 ---
 
-## 参考
+## 次に読むといいかも
+
+- ESLintルール書きたい
+    - [Quramy/eslint-plugin-tutorial: A tutorial/template repository to explain how to create your eslint plugins](https://github.com/Quramy/eslint-plugin-tutorial)
+- Babelプラグイン書きたい
+    - [JavaScript AST入門　ソースを解析・加工して生産性に差をつける！ (技術の泉シリーズ（NextPublishing）) | 佐々木 俊介 | 工学 | Kindleストア | Amazon](https://www.amazon.co.jp/dp/B07CNRC7G4/)
+- jscodeshift書きたい
+    - [JavaScriptのリファクタリングツール「jscodeshift」の使い方 - Qiita](https://qiita.com/toshi-toma/items/93f1dfdf0a820fe6fccc)
+
 
