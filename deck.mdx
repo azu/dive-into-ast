@@ -26,6 +26,12 @@ export const theme = vsDark;
 
 ----
 
+## スライドリソース
+
+- スライド: <https://dive-into-ast.netlify.com>
+- リポジトリ: <https://github.com/azu/dive-into-ast>
+
+----
 
 # AST(Abstract Syntax Tree)
 
@@ -329,6 +335,7 @@ const name='Tom';alert(name);
 
 - 正規表現で `eval(?)` を使っているのを見つけるバリデーションを実装
 - `eval(code)` があったら バリデーションエラー を返す
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/regexp-validator)
 
 ----
 
@@ -417,6 +424,7 @@ const name='Tom';alert(name);
 - ASTを使って同じno-evalを実装する
 - パーサには[acorn](https://github.com/acornjs/acorn)、Traversalには[estree-walker](https://github.com/Rich-Harris/estree-walker)
 - ASTは <https://astexplorer.net/> で確認しよう！
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/ast-validator)
 
 ----
 
@@ -519,6 +527,7 @@ const name='Tom';alert(name);
 - ESLintは[Espree](https://github.com/eslint/espree)をパーサとして使う
     - [Acorn](https://github.com/acornjs/acorn)ベースだけど、ASTが[ESTree](https://github.com/estree/estree)互換
 - トラバースはESLint側でやってくれるのでVisitorを書いていくだけ
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/eslint-plugins-no-eval)
 
 ----
 
@@ -642,6 +651,7 @@ const name='Tom';alert(name);
 - 目的: `console.log`をproductionビルドから取り除きたい
 - `console.log`を取り除く仕組みをBabelプラグインとして実装する
 - BabelのパーサはBabel独自、トラバースはBabel側でやってくれる
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/babel-plugin-no-console)
 
 ----
 
@@ -736,6 +746,7 @@ module.exports = function () {
 - `path.remove`ではなく`path.replaceWith(ast)`を使う
 - `babel-plugin-replace-console-log`を作ってみる
     - `console.log(?)` を `log(?)` に置き換える
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/babel-plugin-replace-console-log)
 
 ----
 
@@ -819,6 +830,7 @@ module.exports = function () {
 - jQueryやDOM APIのようなコレクションAPIでASTを操作していく
 - マイグレーションツールを書く際におすすめ
     - CLIにdry-runや並列処理などがあり大量のファイルを処理できる
+- [実装したコード](https://github.com/azu/dive-into-ast/tree/master/examples/jscodeshift-replace-console-log)
 
 ----
 
@@ -920,3 +932,10 @@ exports.handler = (req) => {
     - [JavaScriptのリファクタリングツール「jscodeshift」の使い方 - Qiita](https://qiita.com/toshi-toma/items/93f1dfdf0a820fe6fccc)
 
 
+---
+
+## その他
+
+- リポジトリ: <https://github.com/azu/dive-into-ast>
+- [JavaScript ASTを始める最初の一歩 | Web Scratch](https://efcl.info/2016/03/06/ast-first-step/)
+- [カジュアルJavaScript AST](https://azu.github.io/slide/JSojisan/#8)
