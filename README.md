@@ -7,9 +7,7 @@ You learn AST by creating AST Tools/Libraries.
 
 ## Presentations
 
-For mode details, see presentation(japanese).
-
-- <https://dive-into-ast.netlify.com/>
+- <https://dive-into-ast.netlify.com/> (Japanese)
 
 ## Implementations
 
